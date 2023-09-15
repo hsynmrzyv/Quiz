@@ -12,12 +12,14 @@ const Context = React.createContext({
   user: null,
 
   index: 0,
+  score: 0,
 
   selectCategory: (category) => {},
   selectAnswer: (answer) => {},
   checkAnswer: () => {},
   getUser: (user) => {},
   updateScore: (score) => {},
+  newGame: () => {},
 });
 
 export default Context;

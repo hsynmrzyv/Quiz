@@ -14,6 +14,7 @@ import Home from "./Pages/Home";
 import Game from "./Pages/Game";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
+import Rankings from "./Pages/Rankings";
 
 // Context
 import Context from "./context";
@@ -78,7 +79,6 @@ const App = () => {
     }
 
     if (data) {
-      console.log(data);
       setVariants(data);
     }
   };
@@ -93,7 +93,9 @@ const App = () => {
       .select("*")
       .eq("userId", user.id);
 
-    setScore(data[0].score);
+    if (data) {
+      setScore(data[0].score);
+    }
   };
 
   const selectCategory = (c) => {
@@ -110,6 +112,14 @@ const App = () => {
     } else {
       setAnswer(a);
     }
+  };
+
+  const newGame = () => {
+    setIndex(0);
+    setCategory(null);
+    setVariants(null);
+    setQuestions(null);
+    setAnswer(null);
   };
 
   const checkAnswer = () => {
@@ -139,6 +149,31 @@ const App = () => {
     setUser(data);
   };
 
+  const sendScore = async () => {
+    if (!user) {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("scores")
+      .update({
+        score: score,
+        userId: user.id,
+        fullname: user.fullname,
+        username: user.username,
+      })
+      .eq("userId", user.id)
+      .select();
+
+    if (error) {
+      console.log(error);
+    }
+
+    if (data) {
+      console.log(data);
+    }
+  };
+
   useEffect(() => {
     getCategories();
   }, []);
@@ -155,6 +190,10 @@ const App = () => {
     getScore();
   }, [user]);
 
+  useEffect(() => {
+    sendScore();
+  }, [score]);
+
   return (
     <Container>
       <Context.Provider
@@ -168,11 +207,13 @@ const App = () => {
           index: index,
           answer: answer,
           user: user,
+          score: score,
           selectCategory: selectCategory,
           selectAnswer: selectAnswer,
           checkAnswer: checkAnswer,
           getUser: getUser,
           updateScore: updateScore,
+          newGame: newGame,
         }}
       >
         <Header />
@@ -189,6 +230,9 @@ const App = () => {
             </Route>
             <Route path="/sign-up">
               <SignUp />
+            </Route>
+            <Route path="/rankings">
+              <Rankings />
             </Route>
           </Switch>
         </Main>

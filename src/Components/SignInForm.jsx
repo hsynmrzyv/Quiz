@@ -46,8 +46,6 @@ const SignupForm = () => {
     }
 
     if (data) {
-      console.log(data);
-
       const newUser = {
         email: data.user.email,
         id: data.user.id,

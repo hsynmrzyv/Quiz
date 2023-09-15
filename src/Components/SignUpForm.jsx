@@ -66,13 +66,22 @@ const SignupForm = () => {
       },
     });
 
-    const { scoreData, scoreError } = await supabase.from("scores").insert({
-      score: 0,
-      userId: data.user.id,
-    });
+    const { scoreData, scoreError } = await supabase
+      .from("scores")
+      .insert({
+        score: 0,
+        userId: data.user.id,
+        fullname: data.user.user_metadata.fullname,
+        username: data.user.user_metadata.username,
+      })
+      .select();
 
     if (error) {
       console.log(error);
+    }
+
+    if (scoreData) {
+      console.log(scoreData);
     }
 
     if (data) {

@@ -1,30 +1,36 @@
 // Components
 import Question from "../Components/Question";
 import Answers from "../Components/Answers";
-
-// Router
-import { useHistory } from "react-router-dom";
-
-// Hooks
-import { useContext } from "react";
+import PlayAgain from "../Components/PlayAgain";
 
 // Context
 import Context from "../context";
 
+// Hooks
+import { useContext } from "react";
+
+// Router
+import { useHistory } from "react-router-dom";
+
 const Game = () => {
-  const { user } = useContext(Context);
+  const { user, index, questions } = useContext(Context);
 
   const { replace } = useHistory();
 
   if (!user) {
-    replace("/sign-in");
+    replace("/");
     return;
   }
 
   return (
     <>
-      <Question />
-      <Answers />
+      {questions.length > index && (
+        <>
+          <Question />
+          <Answers />
+        </>
+      )}
+      {questions.length === index && <PlayAgain />}
     </>
   );
 };
